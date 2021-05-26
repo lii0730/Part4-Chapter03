@@ -1,0 +1,27 @@
+<위치 검색 지도 앱>
+
+- 구글 지도 기반
+- 코루틴을 이용한 비동기 처리 세팅
+
+<검색화면>
+1. POI
+2. Retrofit
+3. GSON
+4. RecyclerView
+5. Coroutines
+
+<지도 위치 화면>
+1. GoogleMap
+2. Intent
+
+<현재 내 위치 기능>
+1. Google Map
+2. POI Geo Reverse
+3. Retrofit
+4. Gson
+
+- RecyclerView 구현하여 Mocking 데이터 뿌리기
+- Tmap POI 데이터 소개 및 데이터 뿌리기
+- GoogleMap 소개 및 데이터 보여주기
+- 추가 기능 구현 및 코드 정리 (현재 내 위치 불러오기)
+
