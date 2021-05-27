@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">AOP-Part4-Chapter03</string>
-    <string name="string_hint">검색어를 입력해주세요</string>
+    <string name="string_input_hint">검색어를 입력해주세요</string>
     <string name="string_search">검색</string>
     <string name="empty_result_text">검색 결과가 없습니다.</string>
+    <string name="Tmap_Key">l7xxa4a6140b1a8840b6b3b27c21d464f8b4</string>
+    <string name="googleMap_key">AIzaSyCD6P9GWl6SF9n2Cg-rBQFJUUBjfICIVng</string>
 </resources>

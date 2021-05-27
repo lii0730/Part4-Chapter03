@@ -22,6 +22,10 @@ class SearchRecyclerViewAdapter() :
         fun bind(data: SearchResultEntity) = with(binding) {
             titleTextView.text = data.name
             subtitleTextView.text = data.fullAdress
+
+            root.setOnClickListener {
+                searchResultClickListener(data)
+            }
         }
     }
 
