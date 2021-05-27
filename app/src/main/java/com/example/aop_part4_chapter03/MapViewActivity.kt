@@ -8,7 +8,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.skt.Tmap.TMapView
 
-class MapViewActivity : AppCompatActivity() {
+class MapViewActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var binding : ActivityMapViewBinding
     private  var map : GoogleMap? = null
@@ -27,9 +27,20 @@ class MapViewActivity : AppCompatActivity() {
 //            }
 //        })
 
-        val mapFragment = SupportMapFragment.newInstance()
-        supportFragmentManager.beginTransaction()
-            .add(R.id.mapView, mapFragment)
-            .commit()
+//        val mapFragment = SupportMapFragment.newInstance()
+//        supportFragmentManager.beginTransaction()
+//            .add(R.id.mapView, mapFragment)
+//            .commit()
+        setupGoogleMap()
+    }
+
+    private fun setupGoogleMap() {
+        val mapFragment : SupportMapFragment = supportFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+    }
+
+    override fun onMapReady(map: GoogleMap?) {
+        this.map = map
+
     }
 }
