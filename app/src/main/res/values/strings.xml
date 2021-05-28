@@ -4,5 +4,5 @@
     <string name="string_search">검색</string>
     <string name="empty_result_text">검색 결과가 없습니다.</string>
     <string name="Tmap_Key">l7xxa4a6140b1a8840b6b3b27c21d464f8b4</string>
-    <string name="googleMap_key">AIzaSyCD6P9GWl6SF9n2Cg-rBQFJUUBjfICIVng</string>
+    <string name="GoogleMap_key">AIzaSyCD6P9GWl6SF9n2Cg-rBQFJUUBjfICIVng</string>
 </resources>

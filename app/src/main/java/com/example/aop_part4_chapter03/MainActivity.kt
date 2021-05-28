@@ -76,7 +76,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         launch(coroutineContext) {
             try{
                 withContext(Dispatchers.IO) {
-
+                   //todo: 검색 동작 실행
+                // retrofit 결과 받아오는 부분
                 }
             } catch (e: Exception) {
 
