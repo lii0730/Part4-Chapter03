@@ -2,11 +2,15 @@ package com.example.aop_part4_chapter03
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.aop_part4_chapter03.databinding.ActivityMainBinding
 import com.example.aop_part4_chapter03.model.LocationLatLngEntity
 import com.example.aop_part4_chapter03.model.SearchResultEntity
+import com.skt.Tmap.TMapData
+import com.skt.Tmap.TMapPOIItem
 import com.skt.Tmap.TMapTapi
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
@@ -15,7 +19,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
     private lateinit var job : Job
     private lateinit var binding: ActivityMainBinding
-    private lateinit var adapter: SearchRecyclerViewAdapter
+    private lateinit var POIAdapter : TmapPOIAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,42 +32,31 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         initAdapter()
         initViews()
         initData()
-        setData()
         bindSearchButton()
     }
 
     private fun initTmapAPI() {
-        val tmapAPI : TMapTapi = TMapTapi(this)
+        val tmapAPI = TMapTapi(this)
         tmapAPI.setSKTMapAuthentication(getString(R.string.Tmap_Key))
     }
 
     private fun initAdapter() {
-        adapter = SearchRecyclerViewAdapter()
+        POIAdapter = TmapPOIAdapter(onItemClicked = {
+            val intent = Intent(this, MapViewActivity::class.java)
+            val resultEntity : SearchResultEntity = createParcelableItem(it)
+            intent.putExtra("POI_ITEM", resultEntity)
+            startActivity(intent)
+        })
     }
 
     private fun initViews() = with(binding){
         noResultTextView.isVisible = false
-        resultRecyclerView.adapter = adapter
+        resultRecyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
+        resultRecyclerView.adapter = POIAdapter
     }
 
     private fun initData() {
-        adapter.notifyDataSetChanged()
-    }
-
-    private fun setData() {
-        val dataList = (0..10).map {
-            SearchResultEntity(
-                name = "빌딩 $it",
-                fullAdress = "주소 $it",
-                locationLatLng = LocationLatLngEntity(
-                    latitude = it.toFloat(),
-                    longtitude = it.toFloat()
-                )
-            )
-        }
-        adapter.setSearchResultListener(dataList) {
-            startActivity(Intent(this, MapViewActivity::class.java))
-        }
+        POIAdapter.notifyDataSetChanged()
     }
 
     private fun bindSearchButton() = with(binding) {
@@ -73,18 +66,30 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     }
 
     private fun search(searchKeyword : String) {
-        launch(coroutineContext) {
-            try{
-                withContext(Dispatchers.IO) {
-                   //todo: 검색 동작 실행
-                // retrofit 결과 받아오는 부분
-                }
-            } catch (e: Exception) {
+        val tmapData = TMapData()
+        try{
+            launch {
+                withContext(Dispatchers.IO){
+                    val poiITems = tmapData.findAllPOI(searchKeyword)
 
+                    withContext(Dispatchers.Main) {
+                        POIAdapter.submitList(poiITems)
+                    }
+                }
             }
+        } catch (e: Exception){
+            Log.i("bindSearchButton_error", e.toString())
         }
+    }
+
+    private fun createParcelableItem(item : TMapPOIItem) : SearchResultEntity{
+        val fullAdress = "${item.upperAddrName} ${item.middleAddrName} ${item.lowerAddrName}"
+        val result = SearchResultEntity(fullAdress, item.poiName, LocationLatLngEntity(item.noorLat.toFloat(), item.noorLon.toFloat()))
+        return result
     }
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 }
+
+

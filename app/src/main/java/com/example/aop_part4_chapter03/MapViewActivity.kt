@@ -2,10 +2,11 @@ package com.example.aop_part4_chapter03
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.example.aop_part4_chapter03.databinding.ActivityMapViewBinding
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
+import com.example.aop_part4_chapter03.model.SearchResultEntity
+import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.skt.Tmap.TMapView
@@ -31,25 +32,31 @@ class MapViewActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(map: GoogleMap?) {
         this.map = map
 
-        val seoul : LatLng = LatLng(37.56, 126.97)
-        val markerOptions : MarkerOptions = MarkerOptions()
-        markerOptions.position(seoul)
+        getData()?.let {
+            val location : LatLng = LatLng(it.locationLatLng.latitude.toDouble(), it.locationLatLng.longtitude.toDouble())
+            val cameraPosition = CameraPosition.builder()
+                .target(location)
+                .zoom(17f)
+                .build()
+            this.map?.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 
-        this.map?.addMarker(markerOptions)
+            val markerOptions : MarkerOptions = MarkerOptions()
+            markerOptions.position(location)
+            markerOptions.title(it.name)
+            markerOptions.snippet(it.fullAdress)
+
+            this.map?.addMarker(markerOptions)?.showInfoWindow()
+        }
     }
 
-    override fun onStart() {
-        super.onStart()
-        mapFragment.onStart()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mapFragment.onResume()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        mapFragment.onStop()
+    private fun getData() : SearchResultEntity?{
+        //TODO: Intent로 Data 넘어오는 것 까지 확인 했고
+        var item : SearchResultEntity? = null
+        if(intent.getParcelableExtra<SearchResultEntity>("POI_ITEM") == null) {
+           return null
+        } else {
+            item = intent.getParcelableExtra<SearchResultEntity>("POI_ITEM") as SearchResultEntity
+            return item
+        }
     }
 }

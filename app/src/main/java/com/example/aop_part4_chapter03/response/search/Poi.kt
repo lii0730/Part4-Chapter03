@@ -1,5 +1,7 @@
 package com.example.aop_part4_chapter03.response.search
 
+import com.google.gson.annotations.SerializedName
+
 data class Poi(
 //POI 의  id
     val id: String? = null,
@@ -44,9 +46,11 @@ data class Poi(
     val roadName: String? = null,
 
 //건물번호 1
+    @SerializedName("buildingNo1")
     val firstBuildNo: String? = null,
 
 //건물번호 2
+    @SerializedName("buildingNo2")
     val secondBuildNo: String? = null,
 
 //업종 대분류명
