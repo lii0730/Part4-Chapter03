@@ -31,7 +31,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         initTmapAPI()
         initAdapter()
         initViews()
-        initData()
         bindSearchButton()
     }
 
@@ -55,10 +54,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         resultRecyclerView.adapter = POIAdapter
     }
 
-    private fun initData() {
-        POIAdapter.notifyDataSetChanged()
-    }
-
     private fun bindSearchButton() = with(binding) {
         searchButton.setOnClickListener {
             search(searchEditText.text.toString())
@@ -70,10 +65,10 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         try{
             launch {
                 withContext(Dispatchers.IO){
-                    val poiITems = tmapData.findAllPOI(searchKeyword)
+                    val poiItems = tmapData.findAllPOI(searchKeyword)
 
                     withContext(Dispatchers.Main) {
-                        POIAdapter.submitList(poiITems)
+                        POIAdapter.submitList(poiItems)
                     }
                 }
             }
@@ -84,7 +79,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
     private fun createParcelableItem(item : TMapPOIItem) : SearchResultEntity{
         val fullAdress = "${item.upperAddrName} ${item.middleAddrName} ${item.lowerAddrName}"
-        val result = SearchResultEntity(fullAdress, item.poiName, LocationLatLngEntity(item.noorLat.toFloat(), item.noorLon.toFloat()))
+        val result = SearchResultEntity(fullAdress, item.poiName, LocationLatLngEntity(item.noorLat.toDouble(), item.noorLon.toDouble()))
         return result
     }
 
